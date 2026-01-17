@@ -39,3 +39,5 @@ online-store/
    python server.py
 python server.py --port 8080
 curl -X POST http://localhost:8000 -d "name=Тест&email=test@example.com"
+# Домашнее задание 1 - README дополнение
+Этот проект содержит выполнение ДЗ 1: верстка страниц и простой HTTP сервер.
