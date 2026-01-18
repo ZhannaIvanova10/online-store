@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Контакты - Интернет-магазин{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Контакты</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">Наши контакты</h3>
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <strong>Адрес:</strong> г. Москва, ул. Тверская, д. 1
+                    </li>
+                    <li class="mb-2">
+                        <strong>Телефон:</strong> +7 (999) 123-45-67
+                    </li>
+                    <li class="mb-2">
+                        <strong>Email:</strong> info@techstore.ru
+                    </li>
+                    <li class="mb-2">
+                        <strong>Режим работы:</strong> Пн-Пт: 9:00-20:00, Сб-Вс: 10:00-18:00
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">Напишите нам</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Ваше имя</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Сообщение</label>
+                        <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Отправить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <h3>Как нас найти</h3>
+    <div class="map-placeholder bg-light p-4 text-center">
+        <p class="mb-0">Здесь будет карта</p>
+        <p class="text-muted">г. Москва, ул. Тверская, д. 1</p>
+    </div>
+</div>
+{% endblock %}

@@ -8,16 +8,10 @@ class Product(models.Model):
     image = models.ImageField(upload_to='products/', verbose_name='Изображение', blank=True, null=True)
     stock = models.IntegerField(default=0, verbose_name='Количество на складе')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
-
+    
     def __str__(self):
         return self.name
     
-    def short_description(self):
-        """Возвращает описание, обрезанное до 100 символов."""
-        if len(self.description) > 100:
-            return self.description[:100] + "..."
-        return self.description
-
     class Meta:
         verbose_name = 'Товар'
         verbose_name_plural = 'Товары'
