@@ -24,7 +24,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'catalog.apps.CatalogConfig',
+    # Мои приложения
+    'catalog',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -36,6 +38,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
@@ -96,3 +99,19 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Кастомная модель пользователя
+AUTH_USER_MODEL = 'users.User'
+
+# Настройки почтового сервера (для разработки)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 25
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = False
+DEFAULT_FROM_EMAIL = 'noreply@onlinestore.com'
+
+# URL для перенаправления после авторизации
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = '/users/login/'
