@@ -18,6 +18,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'catalog',
+    'blog',
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -71,3 +72,10 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 # Для тестирования
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'testserver']
+
+# Настройки кодировки
+DEFAULT_CHARSET = 'utf-8'
+LANGUAGE_CODE = 'ru-ru'
+TIME_ZONE = 'Europe/Moscow'
+USE_I18N = True
+USE_TZ = True

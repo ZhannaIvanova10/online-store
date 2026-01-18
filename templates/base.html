@@ -79,14 +79,14 @@
             {% endfor %}
         </div>
         {% endif %}
-        
         {% block content %}
         <!-- Содержимое страницы -->
         {% endblock %}
     </div>
+
     <footer class="mt-5 py-3 bg-light">
         <div class="container text-center">
-            <p>&copy; 2023 Интернет-магазин. Все права защищены.</p>
+            <p>&copy; {% now "Y" %} Интернет-магазин. Все права защищены.</p>
         </div>
     </footer>
 
