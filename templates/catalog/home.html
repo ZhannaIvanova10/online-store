@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Главная - Интернет-магазин{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Наши товары</h1>
+
+{% if products %}
+<div class="product-list">
+    {% for product in products %}
+    <div class="product-card">
+        <h3>{{ product.name }}</h3>
+        
+        <div class="product-image">
+            {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            {% else %}
+            <img src="{% static 'img/no-image.png' %}" alt="Нет изображения">
+            {% endif %}
+        </div>
+        
+        <div class="product-description">
+            {{ product.short_description }}
+        </div>
+        
+        <div class="product-price">
+            {{ product.price }} руб.
+        </div>
+
+        <div class="product-stock">
+            {% if product.stock > 0 %}
+            <span class="text-success">В наличии: {{ product.stock }} шт.</span>
+            {% else %}
+            <span class="text-danger">Нет в наличии</span>
+            {% endif %}
+        </div>
+        
+        <a href="{% url 'product_detail' product.pk %}" class="btn btn-primary">
+            Подробнее
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">
+    <p>Товары пока не добавлены.</p>
+</div>
+{% endif %}
+
+<div class="mt-4">
+    <h3>Всего товаров: {{ products|length }}</h3>
+</div>
+{% endblock %}
