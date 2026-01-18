@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Удаление продукта{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-danger shadow">
+            <div class="card-header bg-danger text-white">
+                <h3 class="card-title mb-0">
+                    <i class="bi bi-exclamation-triangle"></i> Удаление продукта
+                </h3>
+            </div>
+            
+            <div class="card-body text-center">
+                <div class="mb-4">
+                    <i class="bi bi-trash text-danger" style="font-size: 4rem;"></i>
+                </div>
+                
+                <h4 class="mb-3">Вы уверены, что хотите удалить этот продукт?</h4>
+                
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">{{ product.description|truncatechars:100 }}</p>
+                        <p class="card-text">
+                            <strong>Цена:</strong> {{ product.price }} ₽<br>
+                            <strong>Категория:</strong> {{ product.category.name }}<br>
+                            <strong>Создан:</strong> {{ product.created_at|date:"d.m.Y H:i" }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="alert alert-warning">
+                    <h6 class="alert-heading"><i class="bi bi-warning"></i> Внимание!</h6>
+                    <p class="mb-0">Это действие нельзя отменить. Все данные продукта будут удалены безвозвратно.</p>
+                </div>
+                
+                <form method="post" class="mt-4">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-center gap-3">
+                        <button type="submit" class="btn btn-danger btn-lg">
+                            <i class="bi bi-trash"></i> Да, удалить
+                        </button>
+                        <a href="{% url 'catalog:product_list' %}" class="btn btn-secondary btn-lg">
+                            <i class="bi bi-x-circle"></i> Отмена
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
