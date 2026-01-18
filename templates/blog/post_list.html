@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Блог{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Наш блог</h1>
+    
+    {% if user.is_authenticated %}
+    <div class="mb-4">
+        <a href="{% url 'blog:post_create' %}" class="btn btn-primary">
+            Написать статью
+        </a>
+    </div>
+    {% endif %}
+    {% if posts %}
+    <div class="row">
+        {% for post in posts %}
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                {% if post.preview %}
+                <img src="{{ post.preview.url }}" class="card-img-top" alt="{{ post.title }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ post.title }}</h5>
+                    <p class="card-text">
+                        {{ post.content|truncatewords:30 }}
+                    </p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">
+                            {{ post.created_at|date:"d.m.Y" }}
+                            <span class="ms-2">
+                                <i class="bi bi-eye"></i> {{ post.views_count }}
+                            </span>
+                        </small>
+                        <a href="{% url 'blog:post_detail' post.slug %}" class="btn btn-sm btn-outline-primary">
+                            Читать
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <p class="mb-0">В блоге пока нет статей.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

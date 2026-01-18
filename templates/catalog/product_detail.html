@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} - Интернет-магазин{% endblock %}
+
+{% block content %}
+<div class="product-detail">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Главная</a></li>
+            <li class="breadcrumb-item active">{{ product.name }}</li>
+        </ol>
+    </nav>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="product-image mb-4">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" class="img-fluid rounded" alt="{{ product.name }}">
+                {% else %}
+                <img src="{% static 'img/no-image.png' %}" class="img-fluid rounded" alt="Нет изображения">
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <h1>{{ product.name }}</h1>
+            
+            <div class="product-price mb-3">
+                <h3 class="text-danger">{{ product.price }} руб.</h3>
+            </div>
+
+            <div class="product-stock mb-3">
+                {% if product.stock > 0 %}
+                <span class="badge bg-success">В наличии: {{ product.stock }} шт.</span>
+                {% else %}
+                <span class="badge bg-danger">Нет в наличии</span>
+                {% endif %}
+            </div>
+            
+            <div class="product-description mb-4">
+                <h4>Описание</h4>
+                <p>{{ product.description|linebreaks }}</p>
+            </div>
+            
+            <div class="product-meta mb-4">
+                <p><small class="text-muted">Добавлено: {{ product.created_at|date:"d.m.Y H:i" }}</small></p>
+            </div>
+            
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                <a href="{% url 'home' %}" class="btn btn-outline-secondary me-md-2">
+                    ← Назад к товарам
+                </a>
+                {% if product.stock > 0 %}
+                <button class="btn btn-primary">Добавить в корзину</button>
+                {% else %}
+                <button class="btn btn-secondary" disabled>Нет в наличии</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% if similar_products %}
+<div class="mt-5">
+    <h3>Похожие товары</h3>
+    <div class="row">
+        {% for similar in similar_products %}
+        <div class="col-md-4">
+            <div class="card">
+                {% if similar.image %}
+                <img src="{{ similar.image.url }}" class="card-img-top" alt="{{ similar.name }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ similar.name }}</h5>
+                    <p class="card-text">{{ similar.short_description }}</p>
+                    <p class="card-text"><strong>{{ similar.price }} руб.</strong></p>
+                    <a href="{% url 'product_detail' similar.pk %}" class="btn btn-sm btn-outline-primary">
+                        Подробнее
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}
