@@ -68,3 +68,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Медиа файлы
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+# Для тестирования
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'testserver']
