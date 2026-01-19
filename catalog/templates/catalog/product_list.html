@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Каталог продуктов{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Каталог продуктов</h1>
+    
+    <!-- Фильтры по категориям -->
+    <div class="mb-4">
+        <div class="btn-group">
+            <a href="{% url 'catalog:product_list' %}" class="btn btn-outline-primary">
+                Все категории
+            </a>
+            {% for category in categories %}
+                <a href="?category={{ category.slug }}" class="btn btn-outline-primary">
+                    {{ category.name }}
+                </a>
+            {% endfor %}
+        </div>
+        <!-- Кнопка создания продукта (для авторизованных) -->
+        {% if user.is_authenticated %}
+            <a href="{% url 'catalog:product_create' %}" class="btn btn-success float-end">
+                + Добавить продукт
+            </a>
+        {% endif %}
+    </div>
+    
+    <!-- Список продуктов -->
+    <div class="row">
+        {% for product in products %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                        <img src="{% static 'images/no-image.png' %}" class="card-img-top" alt="No image" style="height: 200px; object-fit: cover;">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">{{ product.description|truncatewords:20 }}</p>
+                        
+                        <!-- Статус продукта -->
+                        <span class="badge {% if product.status == 'published' %}bg-success
+                                          {% elif product.status == 'moderation' %}bg-warning
+                                          {% else %}bg-secondary{% endif %} mb-2">
+                            {{ product.get_status_display }}
+                        </span>
+
+                        <p class="card-text"><strong>Цена:</strong> {{ product.price }} руб.</p>
+                        <p class="card-text"><small class="text-muted">
+                            Категория: {{ product.category.name }}<br>
+                            {% if product.owner %}Владелец: {{ product.owner.username }}{% endif %}
+                        </small></p>
+                        
+                        <a href="{% url 'catalog:product_detail' product.pk %}" class="btn btn-primary">
+                            Подробнее
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info">
+                    {% if request.GET.category %}
+                        В этой категории пока нет продуктов.
+                    {% else %}
+                        Продукты не найдены.
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Пагинация -->
+    {% if is_paginated %}
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">Назад</a>
+                    </li>
+                {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ num }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">{{ num }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">Вперед</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+</div>
+{% endblock %}

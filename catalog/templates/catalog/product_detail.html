@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" class="img-fluid" alt="{{ product.name }}">
+            {% else %}
+                <img src="{% static 'images/no-image.png' %}" class="img-fluid" alt="No image">
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <h1>{{ product.name }}</h1>
+            <p class="text-muted">Категория: {{ product.category.name }}</p>
+            <p>{{ product.description }}</p>
+            <h3 class="text-primary">{{ product.price }} руб.</h3>
+            <!-- Информация о статусе и владельце -->
+            <div class="mt-3">
+                <p><strong>Статус:</strong> 
+                    <span class="badge {% if product.status == 'published' %}bg-success
+                                      {% elif product.status == 'moderation' %}bg-warning
+                                      {% else %}bg-secondary{% endif %}">
+                        {{ product.get_status_display }}
+                    </span>
+                </p>
+                {% if product.owner %}
+                    <p><strong>Владелец:</strong> {{ product.owner.username }}</p>
+                {% endif %}
+                <p><strong>Дата создания:</strong> {{ product.created_at|date:"d.m.Y H:i" }}</p>
+            </div>
+            
+            <!-- Кнопки действий -->
+            <div class="mt-4">
+                {% if user.is_authenticated %}
+                    <!-- Кнопки для владельца -->
+                    {% if user == product.owner %}
+                        <a href="{% url 'catalog:product_edit' product.pk %}" class="btn btn-primary">
+                            Редактировать
+                        </a>
+                        <a href="{% url 'catalog:product_delete' product.pk %}" class="btn btn-danger">
+                            Удалить
+                        </a>
+                    {% endif %}
+                    <!-- Кнопка для отмены публикации (для модератора и владельца) -->
+                    {% if product.status == 'published' and perms.catalog.can_unpublish_product or user == product.owner %}
+                        <a href="{% url 'catalog:unpublish_product' product.pk %}" class="btn btn-warning">
+                            Снять с публикации
+                        </a>
+                    {% endif %}
+                    
+                    <!-- Кнопка удаления для модератора (если не владелец) -->
+                    {% if perms.catalog.delete_product and user != product.owner %}
+                        <a href="{% url 'catalog:product_delete' product.pk %}" class="btn btn-danger">
+                            Удалить (как модератор)
+                        </a>
+                    {% endif %}
+                {% endif %}
+                
+                <a href="{% url 'catalog:product_list' %}" class="btn btn-secondary">
+                    Назад к каталогу
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
