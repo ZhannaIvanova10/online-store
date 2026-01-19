@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Удаление продукта{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">Удаление продукта</h4>
+                </div>
+                <div class="card-body">
+                    <p>Вы уверены, что хотите удалить продукт <strong>"{{ product.name }}"</strong>?</p>
+                    
+                    {% if user == product.owner %}
+                        <div class="alert alert-info">
+                            <strong>Вы владелец этого продукта.</strong>
+                        </div>
+                    {% elif user.has_perm('catalog.delete_product') %}
+                        <div class="alert alert-warning">
+                            <strong>Вы удаляете продукт как модератор.</strong>
+                        </div>
+                    {% endif %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger">Да, удалить</button>
+                            <a href="{% url 'catalog:product_detail' product.pk %}" class="btn btn-secondary">Отмена</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
