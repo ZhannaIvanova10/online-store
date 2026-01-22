@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Продукты в категории: {{ category_name }}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .cache-info {
+            background-color: #e8f4fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        .product-name {
+            color: #333;
+            font-size: 1.4em;
+            margin-bottom: 10px;
+        }
+        .product-price {
+            color: #2e7d32;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .product-quantity {
+            color: #666;
+            margin: 10px 0;
+        }
+        .empty-message {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-style: italic;
+        }
+        .nav-links {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        .nav-links a {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-right: 10px;
+            transition: background 0.3s ease;
+        }
+        .nav-links a:hover {
+            background: #5a67d8;
+        }
+        .stats {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📦 Продукты в категории: {{ category_name }}</h1>
+        <p>ID категории: {{ category_id }}</p>
+    </div>
+
+    <div class="cache-info">
+        <h3>⚡ Информация о кешировании</h3>
+        <p>Эта страница использует <strong>низкоуровневое кеширование Redis</strong>.</p>
+        <p>Данные продуктов кешируются на <strong>15 минут</strong> для ускорения загрузки страницы.</p>
+        <p>При первом обращении данные загружаются из базы данных и сохраняются в Redis.</p>
+        <p>При повторных обращениях данные загружаются из кеша Redis.</p>
+    </div>
+    
+    <div class="stats">
+        <h3>📊 Статистика</h3>
+        <p>Найдено продуктов: <strong>{{ products|length }}</strong></p>
+        <p>Время генерации страницы: {% now "H:i:s" %}</p>
+    </div>
+    
+    {% if products %}
+        <div class="products-grid">
+            {% for product in products %}
+                <div class="product-card">
+                    <h2 class="product-name">{{ product.name }}</h2>
+                    
+                    {% if product.description %}
+                        <p>{{ product.description }}</p>
+                    {% else %}
+                        <p style="color: #999; font-style: italic;">Нет описания</p>
+                    {% endif %}
+                    
+                    <p class="product-price">💰 Цена: {{ product.price }} руб.</p>
+                    <p class="product-quantity">📦 В наличии: {{ product.quantity }} шт.</p>
+                    
+                    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #eee;">
+                        <small>Категория: {{ product.category.name }}</small><br>
+                        <small>Создан: {{ product.created_at|date:"d.m.Y H:i" }}</small>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-message">
+            <h2>😔 В этой категории пока нет продуктов</h2>
+            <p>Добавьте продукты через админ-панель или выберите другую категорию.</p>
+        </div>
+    {% endif %}
+
+    <div class="nav-links">
+        <a href="/">🏠 На главную</a>
+        <a href="/admin/catalog/product/add/">➕ Добавить продукт</a>
+        <a href="/admin/catalog/category/add/">📁 Добавить категорию</a>
+        {% if category_id > 1 %}
+            <a href="/category/{{ category_id|add:'-1' }}/">◀️ Предыдущая категория</a>
+        {% endif %}
+        <a href="/category/{{ category_id|add:'1' }}/">▶️ Следующая категория</a>
+    </div>
+    
+    <footer style="margin-top: 40px; text-align: center; color: #666; padding: 20px;">
+        <p>ДЗ 18.x - Кеширование с Redis | Используется Django + django-redis</p>
+        <p>При обновлении страницы данные будут загружаться из кеша (если не истек таймаут)</p>
+    </footer>
+</body>
+</html>
