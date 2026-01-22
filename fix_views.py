@@ -46,37 +46,3 @@ def category_products(request, category_id):
     }
     
     return render(request, 'catalog/category_products.html', context)
-
-class ProductUpdateView(UpdateView):
-    model = Product
-    template_name = 'catalog/product_form.html'
-    fields = ['name', 'description', 'price']
-    success_url = reverse_lazy('catalog:product_list')
-
-class ProductDeleteView(DeleteView):
-    model = Product
-    template_name = 'catalog/product_confirm_delete.html'
-    success_url = reverse_lazy('catalog:product_list')
-
-from django.shortcuts import render
-from django.views.decorators.cache import cache_page
-from .services import get_all_cached_products_safe as get_all_cached_products
-
-@cache_page(60 * 5)  # Кешировать главную на 5 минут
-def home(request):
-    """
-    Главная страница со списком всех продуктов
-    Использует низкоуровневое кеширование через get_all_cached_products
-    """
-    products = get_all_cached_products()
-    
-    context = {
-        'products': products,
-        'title': '🏪 Онлайн-магазин - Главная страница',
-        'category_name': 'Все категории',
-        'cache_info': 'Используется двухуровневое кеширование: '
-                     '1) cache_page для всей страницы (5 мин) '
-                     '2) get_all_cached_products для данных (30 мин)'
-    }
-    
-    return render(request, 'catalog/product_list.html', context)
