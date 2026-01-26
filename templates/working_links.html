@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Работающие ссылки для тестирования</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .link-list { margin: 20px 0; }
+        .link-item { 
+            margin: 10px 0; 
+            padding: 10px; 
+            background: #f5f5f5; 
+            border-radius: 5px;
+        }
+        .status { 
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            margin-left: 10px;
+            font-size: 0.9em;
+        }
+        .status-200 { background: #d4edda; color: #155724; }
+        .status-404 { background: #f8d7da; color: #721c24; }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>✅ Работающие ссылки для тестирования</h1>
+    
+    <div class="link-list">
+        <h2>Основные тесты:</h2>
+        <div class="link-item">
+            <a href="/" class="btn">🏠 Главная страница</a>
+            <span class="status status-200">✓ Работает</span>
+        </div>
+        <h2>Продукты (используйте реальные ID):</h2>
+        <div id="product-links">
+            <p>Загрузка списка продуктов...</p>
+        </div>
+        
+        <h2>Категории:</h2>
+        <div class="link-item">
+            <a href="/category/1/products/" class="btn">📁 Категория 1</a>
+        </div>
+        <div id="category-links"></div>
+        
+        <h2>Инструменты:</h2>
+        <div class="link-item">
+            <a href="/test-redis/" class="btn">🔍 Проверить Redis</a>
+            <a href="/clear-cache/" class="btn">🗑️ Очистить кэш</a>
+        </div>
+    </div>
+    
+    <script>
+        // Загружаем список продуктов
+        fetch('/products/json/')
+            .then(r => r.json())
+            .then(data => {
+                const container = document.getElementById('product-links');
+                const categoryContainer = document.getElementById('category-links');
+                container.innerHTML = '';
+                categoryContainer.innerHTML = '';
+                
+                data.products.forEach(product => {
+                    // Ссылки на продукты
+                    const productLink = document.createElement('div');
+                    productLink.className = 'link-item';
+                    productLink.innerHTML = `
+                        <a href="/product/${product.id}/" class="btn">📦 ${product.name} (ID: ${product.id})</a>
+                    `;
+                    container.appendChild(productLink);
+                    // Ссылки на категории
+                    const categoryLink = document.createElement('div');
+                    categoryLink.className = 'link-item';
+                    categoryLink.innerHTML = `
+                        <a href="/category/${product.id}/products/" class="btn">📂 Категория ${product.id}</a>
+                    `;
+                    categoryContainer.appendChild(categoryLink);
+                });
+            })
+            .catch(e => {
+                document.getElementById('product-links').innerHTML = 
+                    '<p>Ошибка загрузки. Используйте ID: 6, 7, 8, 9, 10</p>';
+            });
+    </script>
+</body>
+</html>

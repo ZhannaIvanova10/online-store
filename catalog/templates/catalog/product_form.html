@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% if object %}Редактировать{% else %}Создать{% endif %} товар</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; }
+        h1 { color: #333; }
+        form p { margin: 15px 0; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, textarea { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ddd; border-radius: 4px; }
+        textarea { height: 100px; resize: vertical; }
+        button { background: #0066cc; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 4px; }
+        button:hover { background: #0055aa; }
+        .cancel { margin-left: 10px; color: #666; }
+        .error { color: red; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <h1>{% if object %}Редактировать товар: {{ object.name }}{% else %}Создать новый товар{% endif %}</h1>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        {% if form.errors %}
+            <div class="error">
+                Пожалуйста, исправьте ошибки ниже.
+            </div>
+        {% endif %}
+        
+        {% for field in form %}
+            <p>
+                {{ field.label_tag }}<br>
+                {{ field }}
+                {% if field.errors %}
+                    <div class="error">{{ field.errors }}</div>
+                {% endif %}
+                {% if field.help_text %}
+                    <small>{{ field.help_text }}</small>
+                {% endif %}
+            </p>
+        {% endfor %}
+        
+        <button type="submit">Сохранить</button>
+        <a href="{% url 'catalog:product_list' %}" class="cancel">Отмена</a>
+    </form>
+</body>
+</html>
